@@ -1,3 +1,4 @@
+from pickle import TRUE
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
 
@@ -9,9 +10,9 @@ Videos = {1: "deerone", 2: "dercio"}
 
 
 video_put_args = reqparse.RequestParser()
-video_put_args.add_argument('name', type=str, help='This is name of the video.')
-video_put_args.add_argument('viwes', type=int, help='This is viwes of the video.')
-video_put_args.add_argument('likes', type=int, help='This is likes of the video.')
+video_put_args.add_argument('name', type=str, help='Name of the video is required.', required=True)
+video_put_args.add_argument('viwes', type=int, help='Viwes of the video is required.', required=True)
+video_put_args.add_argument('likes', type=int, help='Likes of the video is required.', required=True)
 
 class Video(Resource):
     def get(self, id):
@@ -24,7 +25,6 @@ class Video(Resource):
         return {id: args}
 
 
-# api.add_resource(Video, '/video/')
 api.add_resource(Video, '/videos/<int:id>')
 
 
