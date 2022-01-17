@@ -1,4 +1,3 @@
-from unicodedata import name
 from flask import Flask
 from flask_restful import Api, Resource
 
@@ -6,15 +5,16 @@ app = Flask(__name__)
 
 api = Api(app)
 
-@app.route('/', methods=['GET', 'POST'])
-def welcome():
-    return {"geeting": 'hello flask, i am back'}
-
+Videos = {}
 
 class HelloWorld(Resource):
     def get(self, name):
         return {"name": name}
 
+class Video(Resource):
+    def get(self, video_id):
+        return Videos[video_id]
+    
 
 api.add_resource(HelloWorld, '/helloworld/<string:name>')
 
