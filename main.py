@@ -23,11 +23,17 @@ class Video(Resource):
         args = video_put_args.parse_args()
         Videos[id] = args
         return Videos[id], 200
+    
+    def delete(self, id)
 
 
+def abort_if_video_id_exist(id):
+    if id not in Videos:
+        abort(409,  message="Video already exists...")
+        
 def abort_if_video_id_doesent_exist(id):
     if id not in Videos:
-        abort(404,  message="Video id is not valid...")
+        abort(404,  message="Could not find video...")
         
 
 api.add_resource(Video, '/videos/<int:id>')
