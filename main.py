@@ -1,12 +1,11 @@
-from pickle import TRUE
-from flask import Flask, request
-from flask_restful import Api, Resource, reqparse
+from flask import Flask
+from flask_restful import Api, Resource, abort, reqparse
+
 
 app = Flask(__name__)
-
 api = Api(app)
 
-Videos = {1: "deerone", 2: "dercio"}
+Videos = {1: "derone", 2: "dercio"}
 
 
 video_put_args = reqparse.RequestParser()
@@ -16,14 +15,20 @@ video_put_args.add_argument('likes', type=int, help='Likes of the video is requi
 
 class Video(Resource):
     def get(self, id):
-        print(request.method)
+        abort_if_video_id_doesent_exist(id)
         return Videos[id]
     
     def put(self, id):
+        abort_if_video_id_doesent_exist(id)
         args = video_put_args.parse_args()
         Videos[id] = args
         return Videos[id], 200
 
+
+def abort_if_video_id_doesent_exist(id):
+    if id not in Videos:
+        abort(404,  message="Video id is not valid...")
+        
 
 api.add_resource(Video, '/videos/<int:id>')
 
