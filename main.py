@@ -6,6 +6,10 @@ app = Flask(__name__)
 
 api = Api(app)
 
+@app.route('/', methods=['GET', 'POST'])
+def welcome():
+    return {"geeting": 'hello flask, i am back'}
+
 
 class HelloWorld(Resource):
     def get(self, name):
@@ -22,11 +26,4 @@ if __name__ == '__main__':
     
     
     
-# @app.route('/', methods=['GET', 'POST'])
-# def welcome():
-#     return 'hello flask, i am back'
 
-# @app.route('/games', methods=['GET', 'POST'])
-# def games():
-#     response = {'id': 1, 'name': 'Roleta Russa'};
-#     return jsonify(response)
