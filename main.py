@@ -1,18 +1,18 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+import uvicorn
+
+from Api.config.settings import Settings
 
 app = FastAPI()
 
-class Games(BaseModel):
-    id: int
-    name: str
-    description: str
-    image: str
-    isActive: Optional[bool] = False
-
+settings = Settings()
 
 @app.get('/')
-async def root():
-    return {'message': 'Hello FastApi'}
+async def index():
+    return {'message': f'Hello this is the {settings.app_name} System Api and Notifications Service.', 'db': settings.mongo_url}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)
+
 

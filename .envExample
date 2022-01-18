@@ -1,0 +1,2 @@
+APP_NAME = "Winthebet"
+MONGO_URL = "themongodburl"
