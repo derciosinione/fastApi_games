@@ -5,7 +5,7 @@ from flask_restful import Api, Resource, abort, reqparse
 app = Flask(__name__)
 api = Api(app)
 
-Videos = {1: "derone", 2: "dercio"}
+Videos = {}
 
 
 video_put_args = reqparse.RequestParser()
@@ -14,17 +14,26 @@ video_put_args.add_argument('viwes', type=int, help='Viwes of the video is requi
 video_put_args.add_argument('likes', type=int, help='Likes of the video is required.', required=True)
 
 class Video(Resource):
+    def get(self):
+        abort_if_video_id_doesent_exist(id)
+        return Videos, 200
+    
     def get(self, id):
         abort_if_video_id_doesent_exist(id)
-        return Videos[id]
+        return Videos[id], 200
     
     def put(self, id):
+        abort_if_video_id_exist(id)
         abort_if_video_id_doesent_exist(id)
         args = video_put_args.parse_args()
         Videos[id] = args
         return Videos[id], 200
     
-    def delete(self, id)
+    def delete(self, id):
+        abort_if_video_id_doesent_exist(id)
+        del Videos[id];
+        return '', 204
+        
 
 
 def abort_if_video_id_exist(id):
@@ -35,7 +44,7 @@ def abort_if_video_id_doesent_exist(id):
     if id not in Videos:
         abort(404,  message="Could not find video...")
         
-
+endpoint = 'videos'
 api.add_resource(Video, '/videos/<int:id>')
 
 
