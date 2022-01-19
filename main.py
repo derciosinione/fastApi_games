@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 import uvicorn
 
-from Api.config.settings import Settings
+from Api.Config.settings import Settings
+from Api.Controllers.gamesController import games
 
 app = FastAPI()
+app.include_router(games)
 
 settings = Settings()
 

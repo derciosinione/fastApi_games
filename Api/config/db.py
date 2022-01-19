@@ -1,4 +1,5 @@
 from pymongo import MongoClient
 from os import getenv
 
-conn = MongoClient(getenv('MongoUrl'))
+MongoClient = MongoClient(getenv('MongoUrl'))
+db = MongoClient.WbSystemApi;

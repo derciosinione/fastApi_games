@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class Games(BaseModel):
-    id: int
+class CreateGame(BaseModel):
     name: str
     description: str
     imageUrl: str
