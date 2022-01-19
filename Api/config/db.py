@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-from os import getenv
+from Api.Config.settings import Settings
 
-MongoClient = MongoClient(getenv('MongoUrl'))
-db = MongoClient.WbSystemApi;
+settings = Settings()
+MongoClient = MongoClient(settings.mongo_url)
+db = MongoClient.WbSystemDB;
