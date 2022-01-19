@@ -1,16 +1,10 @@
-import os, shutil
-# import shutil
-from uuid import uuid4
-from typing import Any
 from fastapi import APIRouter, status, Response, File, UploadFile
 from bson import ObjectId
-from PIL import Image
-import PIL
-from starlette.routing import request_response 
 
 from Api.Config.db import db
 from Api.Models.Dto.CreateGameDto import CreateGame
 from Api.Schemas.games import gamesEntities, gameEntity
+from Api.helpers.save_picture import save_picture
 
 
 gamesRoutes = APIRouter()
@@ -59,28 +53,11 @@ async def deleteGame(id, response: Response):
 
 @gamesRoutes.post('/games/image-upload', status_code=status.HTTP_200_OK)
 async def uploadGameImage(file: UploadFile = File(...)):
-    save_picture(file)
-    # file.filenam
-    # with open('test1.jpg', 'wb') as buffer:
-    #     shutil.copyfileobj(file.file, buffer)
-    #     buffer.close()
-    return {"filename": file.filename, "contentType": file.content_type}
+    filename = save_picture(file, 'games')
+    return {"filename": filename, "contentType": file.content_type}
 
 
 @gamesRoutes.post('/games/create-file', status_code=status.HTTP_200_OK)
 async def uploadGameImage(file: bytes = File(...)):
     return { "size": len(file)}
 
-
-def save_picture(picture):
-    randon_uid = str(uuid4())
-    _, f_ext = os.path.splitext(picture.filename)
-    picture_fn = randon_uid + f_ext
-    picture_path = os.path.join(picture_fn)
-
-    output_size = (125,125)
-    img = Image.open(picture.file)
-    img.thumbnail(output_size)
-    img.save(picture_path)
-
-    return picture_fn
