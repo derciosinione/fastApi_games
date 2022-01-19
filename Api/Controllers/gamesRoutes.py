@@ -1,13 +1,12 @@
-from fastapi import APIRouter, status, Response, File, UploadFile
+from fastapi import status, Response, File, UploadFile
 from bson import ObjectId
 
 from Api.Config.db import db
 from Api.Models.Dto.CreateGameDto import CreateGame
 from Api.Schemas.games import gamesEntities, gameEntity
 from Api.helpers.save_picture import save_picture
+from Api.Routes import gamesRoutes
 
-
-gamesRoutes = APIRouter()
 
 @gamesRoutes.get('/games', status_code=status.HTTP_200_OK)
 async def getAll():

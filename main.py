@@ -1,17 +1,12 @@
 from fastapi import FastAPI
 import uvicorn
 
-from Api.Config.settings import Settings
-from Api.Controllers.gamesController import gamesRoutes
+from Api.Controllers.gamesRoutes import gamesRoutes
+from Api.Controllers.defaultRoute import defaultRoute
 
 app = FastAPI()
 app.include_router(gamesRoutes)
-
-settings = Settings()
-
-@app.get('/')
-async def index():
-    return {'message': f'Hello this is the {settings.app_name} System Api and Notifications Service.', 'db': settings.mongo_url}
+app.include_router(defaultRoute)
 
 
 if __name__ == "__main__":
