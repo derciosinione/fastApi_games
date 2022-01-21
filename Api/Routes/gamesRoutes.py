@@ -36,13 +36,16 @@ async def updateGame(id, game: CreateGame):
     isUpdated : bool = await service.updateGame(id, game);
     if not isUpdated:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ocorreu um erro ao editar as informações do jogo")
+    return None
 
 
 @gamesRoutes.delete('/games/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def deleteGame(id):
-    result = db.games.find_one({"_id": ObjectId(id)})
+    result = await service.getById(id)
     await riseHttpExceptionIfNotFound(result)
-    db.games.find_one_and_delete({"_id": ObjectId(id)})
+    isDeleted : bool = await service.deleteGame(id);
+    if not isDeleted:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ocorreu um erro ao eliminar este jogo")
     return None
 
 

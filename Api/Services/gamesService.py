@@ -22,6 +22,10 @@ async def updateGame(id, game: CreateGame) -> bool:
     db.games.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(game)})
     return True
 
+async def savePicture(id, imageUrl: str) -> bool:
+    db.games.find_one_and_update({"_id": ObjectId(id)}, {"$set": { "imageUrl": imageUrl }})
+    return True
+
 
 async def deleteGame(id) -> bool:
     db.games.find_one_and_delete({"_id": ObjectId(id)})
