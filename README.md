@@ -1,4 +1,4 @@
-# Winthebet System Api and Notifications Service
+# Games WebAPI made with FastApi
 
 In order to run this project you have to run the following code:
 uvicorn main:app --reload
