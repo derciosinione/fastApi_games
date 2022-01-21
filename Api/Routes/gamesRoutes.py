@@ -3,14 +3,14 @@ from bson import ObjectId
 
 from Api.Config.db import db
 from Api.Models.Dto.CreateGameDto import CreateGame
-from Api.Schemas.games import gamesEntities, gameEntity
+from Api.Schemas.games import serializeDict, serializeList
 from Api.helpers.save_picture import save_picture
 from Api.Routes import gamesRoutes
 
 
 @gamesRoutes.get('/games', status_code=status.HTTP_200_OK)
 async def getAll():
-    return gamesEntities(db.games.find())
+    return serializeList(db.games.find())
 
 @gamesRoutes.get('/games/{id}')
 async def getById(id, response: Response):
@@ -18,14 +18,19 @@ async def getById(id, response: Response):
     if result is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message":"Could not find game with the given Id"}
-    return gameEntity(result)
+    return serializeDict(result)
+    # print(**{i:str(result[i]) for i in result if i=='_id'},**{i:result[i] for i in result if i!='_id'})
+    # for i in result:
+    #     if(i=='_id'):
+    #         print(**{i:str(result[i])})
+    # return
     
 
 @gamesRoutes.post('/games', status_code=status.HTTP_200_OK)
 async def createGame(game: CreateGame):
     result = db.games.insert_one(dict(game))
     inserted = db.games.find_one({"_id": ObjectId(result.inserted_id)})
-    return gameEntity(inserted)
+    return serializeDict(inserted)
 
 
 @gamesRoutes.put('/games/{id}', status_code=status.HTTP_200_OK)
@@ -37,7 +42,7 @@ async def updateGame(id, game: CreateGame, response: Response):
         return {"message":"Could not find game with the given Id"}
     
     db.games.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(game)})
-    return gameEntity(db.games.find_one({"_id": ObjectId(id)}))
+    return serializeDict(db.games.find_one({"_id": ObjectId(id)}))
 
 
 @gamesRoutes.delete('/games/{id}', status_code=status.HTTP_204_NO_CONTENT)

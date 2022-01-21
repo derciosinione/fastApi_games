@@ -2,8 +2,8 @@ from fastapi import FastAPI
 import uvicorn
 from fastapi.staticfiles import StaticFiles
 
-from Api.Controllers.gamesRoutes import gamesRoutes
-from Api.Controllers.defaultRoute import defaultRoute
+from Api.Routes.gamesRoutes import gamesRoutes
+from Api.Routes.defaultRoute import defaultRoute
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
