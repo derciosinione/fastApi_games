@@ -9,7 +9,7 @@ def save_picture(file, folderName: str = '', fileName: str = None):
     _, f_ext = os.path.splitext(file.filename)
     
     picture_name = (randon_uid if fileName==None else fileName.lower().replace(' ', '')) + f_ext 
-    print(picture_name)
+
     path = os.path.join(static,folderName)
     if not os.path.exists(path):
         os.makedirs(path)
