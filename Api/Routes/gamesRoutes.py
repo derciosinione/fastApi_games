@@ -3,7 +3,7 @@ from bson import ObjectId
 
 from Api.Config.db import db
 from Api.Models.Dto.CreateGameDto import CreateGame
-from Api.Schemas.games import serializeDict, serializeList
+from Api.Schemas.serializeObjects import serializeDict, serializeList
 from Api.helpers.save_picture import save_picture
 from Api.Routes import gamesRoutes
 
@@ -12,19 +12,15 @@ from Api.Routes import gamesRoutes
 async def getAll():
     return serializeList(db.games.find())
 
+
 @gamesRoutes.get('/games/{id}')
 async def getById(id, response: Response):
     result = db.games.find_one({"_id": ObjectId(id)})
     if result is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message":"Could not find game with the given Id"}
-    return serializeDict(result)
-    # print(**{i:str(result[i]) for i in result if i=='_id'},**{i:result[i] for i in result if i!='_id'})
-    # for i in result:
-    #     if(i=='_id'):
-    #         print(**{i:str(result[i])})
-    # return
-    
+    return serializeDict(result)    
+
 
 @gamesRoutes.post('/games', status_code=status.HTTP_200_OK)
 async def createGame(game: CreateGame):
@@ -55,10 +51,19 @@ async def deleteGame(id, response: Response):
     db.games.find_one_and_delete({"_id": ObjectId(id)})
     return None
 
-@gamesRoutes.post('/games/image-upload', status_code=status.HTTP_200_OK)
-async def uploadGameImage(file: UploadFile = File(...)):
-    filename = save_picture(file, 'games')
-    return {"filename": filename, "contentType": file.content_type}
+
+@gamesRoutes.post('/games/{id}/image-upload', status_code=status.HTTP_200_OK)
+async def uploadGameImage(id: str, response: Response, file: UploadFile = File(...)):
+    game = db.games.find_one({"_id": ObjectId(id)})
+    
+    if game is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message":"Could not find game with the given Id"}
+    
+    filename = save_picture(file=file, folderName='games', fileName=game['name'])
+    
+    db.games.find_one_and_update({"_id": ObjectId(id)}, {"$set": { "imageUrl": filename }})
+    return serializeDict(db.games.find_one({"_id": ObjectId(id)}))
 
 
 @gamesRoutes.post('/games/create-file', status_code=status.HTTP_200_OK)
