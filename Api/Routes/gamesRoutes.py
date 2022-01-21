@@ -1,4 +1,4 @@
-from fastapi import status, Response, File, UploadFile, HTTPException
+from fastapi import status, File, UploadFile, HTTPException
 from bson import ObjectId
 
 from Api.Config.db import db
@@ -39,7 +39,7 @@ async def updateGame(id, game: CreateGame):
 
 
 @gamesRoutes.delete('/games/{id}', status_code=status.HTTP_204_NO_CONTENT)
-async def deleteGame(id, response: Response):
+async def deleteGame(id):
     result = db.games.find_one({"_id": ObjectId(id)})
     await riseHttpExceptionIfNotFound(result)
     db.games.find_one_and_delete({"_id": ObjectId(id)})
