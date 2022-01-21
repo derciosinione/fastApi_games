@@ -1,4 +1,10 @@
 from fastapi import APIRouter
 
 defaultRoute = APIRouter()
-gamesRoutes = APIRouter()
+
+class GamesRoute:
+    route = APIRouter()
+    base = '/games/'
+    UploadImage = f'{base}image-upload/'
+
+
