@@ -18,6 +18,7 @@ def save_picture(file, folderName: str = '', fileName: str = None):
 
     output_size = (125,125)
     img = Image.open(file.file)
+    
     img.thumbnail(output_size)
     img.save(picture_path)
     
